@@ -191,12 +191,31 @@ async def cmd_ban(ctx, member: discord.Member, *, reason="غير محدد"):
 async def cmd_timeout(ctx, member: discord.Member, minutes: int = 10):
     duration = datetime.timedelta(minutes=minutes)
     await member.timeout(duration)
+    
     embed = discord.Embed(
         description=f"🤐 {member.mention} اختفى لمدة {minutes} دقائق.",
         color=discord.Color.orange())
     embed.set_author(name=bot.user.name, icon_url=bot.user.display_avatar.url)
     await ctx.send(embed=embed)
 
+    log_id = 1479860137970630746
+    log_channel = bot.get_channel(log_id) or await bot.fetch_channel(log_id)
+    
+    if log_channel:
+        try:
+            log_embed = discord.Embed(
+                title="🔨 تنفيذ عقوبة: اختفي",
+                color=discord.Color.orange(),
+                timestamp=datetime.datetime.now()
+            )
+            log_embed.add_field(name="المشرف:", value=f"{ctx.author.mention}", inline=True)
+            log_embed.add_field(name="العضو المعاقب:", value=f"{member.mention}", inline=True)
+            log_embed.add_field(name="المدة:", value=f"{minutes} دقيقة", inline=True)
+            log_embed.set_footer(text=f"سجل الإدارة | {ctx.author.name}")
+            await log_channel.send(embed=log_embed)
+        except Exception as e:
+            print(f"Error: {e}")
+    
 
 @bot.command(name="مسح")
 @commands.has_permissions(manage_messages=True)
