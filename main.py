@@ -606,18 +606,14 @@ async def on_message(message):
 MOVE_LOG_CHANNEL_ID = 1479861318331793410
 
 # --- [1] أمر نقل الأعضاء (Move) ---
-@bo�t.tree.command(name="move", description="نقل عضو من قناة صوتية إلى أخرى")
-@app_commands.checks.has_permissions(move_members=True)
+@bot.tree.command(name="move", description="نقل عضو من قناة إلى أخرى")
 async def move(interaction: discord.Interaction, member: discord.Member, channel: discord.VoiceChannel):
-    if not member.voice:
-        return await interaction.response.send_message(f"❌ {member.mention} ليس متواجداً في قناة صوتية حالياً.", ephemeral=True)
+    if interaction.user.guild_permissions.move_members:
+        await member.move_to(channel)
+        await interaction.response.send_message(f"تم نقل {member.mention}", ephemeral=True)
+    else:
+        await interaction.response.send_message("لا تملك صلاحية", ephemeral=True)
 
-        old_channel = member.voice.channel
-
-        try:
-            await member.move_to(channel)
-            await interaction.response.send_message(f"✅ تم نقل {member.mention} إلى **{channel.name}**.", ephemeral=True)
-            
             # --- توزيع اللوق الذكي للأمر ---
             SERVER_VOICE_LOGS = {
                 1394284974680838388: 1479861318331793410, # سيرفرك الأساسي
