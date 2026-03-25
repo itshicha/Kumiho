@@ -615,7 +615,7 @@ async def move(interaction: discord.Interaction, member: discord.Member, channel
         await interaction.response.send_message("لا تملك صلاحية", ephemeral=True)
 
             # --- توزيع اللوق الذكي للأمر ---
-            SERVER_VOICE_LOGS = {
+        SERVER_VOICE_LOGS = {
                 1394284974680838388: 1479861318331793410, # سيرفرك الأساسي
                 1182934425013604362: 1480697888257609778  # سيرفر كوميهو
             }
